@@ -20,36 +20,53 @@ public class Handler {
     UserRepository userRepository;
 
     public Mono<ServerResponse> findUser(ServerRequest serverRequest) {
-     Flux<UserModels> users =  userRepository.findAll();
+        Flux<UserModels> users = userRepository.findAll();
 
-     return ServerResponse.ok()
+        return ServerResponse.ok()
                 .body(users
-                        .doOnNext( val -> LOGGER.info("user: {}",val)), UserModels.class);
+                        .doOnNext(val -> LOGGER.info("user: {}", val)), UserModels.class);
     }
 
     public Mono<ServerResponse> findUserById(ServerRequest serverRequest) {
+        String id = serverRequest.pathVariable("id");
         return ServerResponse.ok()
-                .body(Mono.just("findUserById"), String.class);
+                .body(userRepository.findById(id)
+                        .doOnNext(val -> LOGGER.info("user: {}", val)), UserModels.class);
     }
 
     public Mono<ServerResponse> saveUser(ServerRequest serverRequest) {
         Flux<UserModels> userSaved = userRepository
                 .saveAll(serverRequest.bodyToMono(UserModels.class))
-        .doOnNext(
-                val -> LOGGER.info("guardado: "+val)
-        );
+                .doOnNext(
+                        val -> LOGGER.info("guardado: " + val)
+                );
         return ServerResponse.ok()
                 .body(userSaved, UserModels.class);
     }
 
     public Mono<ServerResponse> updateUser(ServerRequest serverRequest) {
+        String id = serverRequest.pathVariable("id");
+        Mono<UserModels> userModels = serverRequest.bodyToMono(UserModels.class)
+                .map(
+                        user -> {
+                            UserModels newUser = user;
+                            newUser.setId(id);
+                            return newUser;
+                        }
+                );
+
         return ServerResponse.ok()
-                .body(Mono.just("updateUser"), String.class);
+                .body(userRepository.saveAll(userModels)
+                        .doOnNext(val -> LOGGER.info("Actualizado: " + val)), UserModels.class);
     }
 
     public Mono<ServerResponse> deleteUser(ServerRequest serverRequest) {
+        String id = serverRequest.pathVariable("id");
         return ServerResponse.ok()
-                .body(Mono.just("deleteUser"), String.class);
+                .body(userRepository.deleteById(id)
+                        .doOnNext(
+                                val -> LOGGER.info("Actualizado: " + val)
+                        ), String.class);
     }
 
 }
