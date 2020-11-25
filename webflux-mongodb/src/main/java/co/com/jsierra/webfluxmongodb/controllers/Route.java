@@ -19,6 +19,6 @@ public class Route {
                 .andRoute(GET(PATH+"/{id}").and(accept(MediaType.APPLICATION_JSON)), handler::findUserById)
                 .andRoute(POST(PATH).and(accept(MediaType.APPLICATION_JSON)), handler::saveUser)
                 .andRoute(PUT(PATH+"/{id}").and(accept(MediaType.APPLICATION_JSON)), handler::updateUser)
-                .andRoute(DELETE(PATH).and(accept(MediaType.APPLICATION_JSON)), handler::deleteUser);
+                .andRoute(DELETE(PATH+"/{id}").and(accept(MediaType.APPLICATION_JSON)), handler::deleteUser);
     }
 }
