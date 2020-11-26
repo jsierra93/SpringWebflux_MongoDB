@@ -13,7 +13,8 @@ services:
       - ./mongo-volume:/data/db
     ports:
       - '27017-27019:27017-27019'
-  app-container:
+
+  app:
     build:
       context: .
       dockerfile: Dockerfile

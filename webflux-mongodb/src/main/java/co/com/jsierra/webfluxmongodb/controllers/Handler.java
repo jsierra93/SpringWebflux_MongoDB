@@ -24,21 +24,21 @@ public class Handler {
 
         return ServerResponse.ok()
                 .body(users
-                        .doOnNext(val -> LOGGER.info("user: {}", val)), UserModels.class);
+                        .doOnNext(val -> LOGGER.info("consult: {}", val)), UserModels.class);
     }
 
     public Mono<ServerResponse> findUserById(ServerRequest serverRequest) {
         String id = serverRequest.pathVariable("id");
         return ServerResponse.ok()
                 .body(userRepository.findById(id)
-                        .doOnNext(val -> LOGGER.info("user: {}", val)), UserModels.class);
+                        .doOnNext(val -> LOGGER.info("consult by Id: {}", val)), UserModels.class);
     }
 
     public Mono<ServerResponse> saveUser(ServerRequest serverRequest) {
         Flux<UserModels> userSaved = userRepository
                 .saveAll(serverRequest.bodyToMono(UserModels.class))
                 .doOnNext(
-                        val -> LOGGER.info("guardado: " + val)
+                        val -> LOGGER.info("save: " + val)
                 );
         return ServerResponse.ok()
                 .body(userSaved, UserModels.class);
@@ -57,7 +57,7 @@ public class Handler {
 
         return ServerResponse.ok()
                 .body(userRepository.saveAll(userModels)
-                        .doOnNext(val -> LOGGER.info("Actualizado: " + val)), UserModels.class);
+                        .doOnNext(val -> LOGGER.info("update: " + val)), UserModels.class);
     }
 
     public Mono<ServerResponse> deleteUser(ServerRequest serverRequest) {
@@ -65,7 +65,7 @@ public class Handler {
         return ServerResponse.ok()
                 .body(userRepository.deleteById(id)
                         .doOnNext(
-                                val -> LOGGER.info("Actualizado: " + val)
+                                val -> LOGGER.info("delete: " + val)
                         ), String.class);
     }
 

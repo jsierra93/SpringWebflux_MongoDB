@@ -10,9 +10,14 @@ spring:
       password: dev1234
       database: usersdb
       port: 27017
-      host: 127.0.0.1  #(Activar para usar mongo-docker)
+      host: 127.0.0.1
     #uri: mongodb://dev1234:dev1234@localhost:27017/usersdb
 management:
   health:
+    diskspace:
+      enabled: false
     mongo:
       enabled: true
+  endpoint:
+    health:
+      show-details: always
