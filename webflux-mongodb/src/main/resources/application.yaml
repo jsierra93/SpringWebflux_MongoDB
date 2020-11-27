@@ -18,6 +18,8 @@ management:
       enabled: false
     mongo:
       enabled: true
+    ping:
+      enabled: false
   endpoint:
     health:
       show-details: always

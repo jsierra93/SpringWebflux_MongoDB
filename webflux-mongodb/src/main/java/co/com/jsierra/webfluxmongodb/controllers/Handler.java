@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
@@ -35,13 +36,11 @@ public class Handler {
     }
 
     public Mono<ServerResponse> saveUser(ServerRequest serverRequest) {
-        Flux<UserModels> userSaved = userRepository
-                .saveAll(serverRequest.bodyToMono(UserModels.class))
-                .doOnNext(
-                        val -> LOGGER.info("save: " + val)
-                );
-        return ServerResponse.ok()
-                .body(userSaved, UserModels.class);
+
+        Mono<UserModels> userSave = serverRequest.bodyToMono(UserModels.class);
+        return ServerResponse
+                .status(HttpStatus.CREATED)
+                .body(userRepository.saveAll(userSave), UserModels.class);
     }
 
     public Mono<ServerResponse> updateUser(ServerRequest serverRequest) {
@@ -69,5 +68,32 @@ public class Handler {
                         ), String.class);
     }
 
+    public Mono<String> findUser(Mono<UserModels> user) {
+        Mono<String> result = user.flatMap(
+                x -> userRepository.findByUsername(x.getUsername()).count()
+        ).flatMap(
+                val -> val.equals(1L) ? Mono.just("Usuario Existe") : Mono.empty()
+        );
+        return result;
+    }
+
+    public Mono<String> saveUser(Mono<UserModels> user) {
+        return user.flatMap(
+                val -> {
+                    userRepository.save(val).doOnSuccess(x -> LOGGER.info("doOnSuccess Save {}", x));
+                    return Mono.just("guardado");
+                }
+        );
+    }
 }
+
+/*
+user.flatMap(
+                x -> userRepository.save(x).doOnSuccess(val -> LOGGER.info("doOnSuccess Save2 {}", val))
+        ).flatMap(
+                val -> Mono.just("val.getId()")
+        ).doOnError(val -> LOGGER.info("doOnError {}", val)
+        ).doOnNext(val -> LOGGER.info("doOnNext {}", val))
+                .doOnSuccess(val -> LOGGER.info("doOnSuccess {}", val));
+ */
 

@@ -1,0 +1,6 @@
+${AnsiColor.BRIGHT_BLUE}         ,--.  ,---.   ,--. ,------. ,------.  ,------.    ,---.
+${AnsiColor.BRIGHT_BLUE}         |  | '   .-'  |  | |  .---' |  .--. ' |  .--. '  /  O  \
+${AnsiColor.BRIGHT_GREEN}    ,--. |  | `.  `-.  |  | |  `--,  |  '--'.' |  '--'.' |  .-.  |
+${AnsiColor.BRIGHT_GREEN}    |  '-'  / .-'    | |  | |  `---. |  |\  \  |  |\  \  |  | |  |
+${AnsiColor.BRIGHT_GREEN}     `-----'  `-----'  `--' `------' `--' '--' `--' '--' `--' `--'
+${AnsiColor.DEFAULT}:: Spring Boot${spring-boot.formatted-version} :: ${AnsiColor.DEFAULT}
